@@ -15,8 +15,9 @@ const iconoIniciarPausar = document.querySelector(".app__card-primary-butto-icon
 const audioPlay = new Audio('./sonidos/play.wav');
 const audioPausa = new Audio('./sonidos/pause.mp3');
 const audioTiempoFinalizado = new Audio('./sonidos/beep.mp3');
+
 const tiempoEnPantalla=document.querySelector('#timer');
-let tiempoTranscurridoEnSegundos =5;
+let tiempoTranscurridoEnSegundos =1500;
 let idIntervalo=null;
 
 musica.loop=true;
@@ -33,6 +34,8 @@ inputEnfoqueMusica.addEventListener('change',()=>{
 botonCorto.addEventListener('click', ()=> {
     //html.setAttribute('data-contexto','descanso-corto');
     //banner.setAttribute('src','./imagenes/descanso-corto.png');
+
+    tiempoTranscurridoEnSegundos=300;
     cambiarContexto('descanso-corto');
     botonCorto.classList.add('active');
 });//aero feishon
@@ -40,6 +43,8 @@ botonCorto.addEventListener('click', ()=> {
 botonEnfoque.addEventListener('click' , ()=> {
     /*html.setAttribute('data-contexto','enfoque');
     banner.setAttribute('src','./imagenes/enfoque.png');*/
+
+    tiempoTranscurridoEnSegundos=1500;
     cambiarContexto('enfoque');
     botonEnfoque.classList.add('active');
 });
@@ -47,11 +52,15 @@ botonEnfoque.addEventListener('click' , ()=> {
 botonLargo.addEventListener('click' , ()=> {
    /* html.setAttribute('data-contexto','descanso-largo');
     banner.setAttribute('src','./imagenes/descanso-largo.png');*/
+
+    tiempoTranscurridoEnSegundos=900;
     cambiarContexto('descanso-largo');
     botonLargo.classList.add('active');
 });
 
 function cambiarContexto(contexto){
+
+    mostrarTiempo();
     //limpiar los botones que no fueron clickeados
     botones.forEach(function(contexto){
         contexto.classList.remove('active');
@@ -60,7 +69,7 @@ function cambiarContexto(contexto){
     
     html.setAttribute('data-contexto',contexto);
     banner.setAttribute('src',`./imagenes/${contexto}.png`);
-
+//CAMBIAR EL TITULO DE CADA UNO DE LOS BOTONES
     switch(contexto){
         case "enfoque":
             titulo.innerHTML=`
@@ -97,11 +106,16 @@ const cuentaREgresiva=()=>{
        return; 
     }
     textoIniciarPausar.textContent="Pausar";
-    iconoIniciarPausar.setAttribute('src' , `/imagenes/pausa.png`);
+    iconoIniciarPausar.setAttribute('src' , `/imagenes/pause.png`);
     //disminuir el valor de la variable en uno cada vez que la función "cuentaRegresiva" es ejecutada.
     tiempoTranscurridoEnSegundos -=1;
+    /*
     console.log("Temporizador: " + tiempoTranscurridoEnSegundos);// Muestra el tiempo actual
     console.log('Id: ' + idIntervalo) // Muestra el ID actual
+    */
+
+    //tiempo
+    mostrarTiempo();
 }
 
 //botonIniciarPausar.addEventListener('click',cuentaREgresiva);
@@ -125,3 +139,13 @@ function reiniciar(){
     textoIniciarPausar.textContent="Comenzar";
     iconoIniciarPausar.setAttribute('src' , `/imagenes/play_arrow.png`);
 }
+
+function mostrarTiempo(){
+    const tiempo=new Date(tiempoTranscurridoEnSegundos *1000) ;
+    //formatea l ahora segun la persona elija- hora de la region
+    const tiempoFormateado=tiempo.toLocaleTimeString('es-MX',{minute:'2-digit', second:'2-digit'});
+
+    tiempoEnPantalla.innerHTML=`${tiempoFormateado}`;
+}
+
+mostrarTiempo();
