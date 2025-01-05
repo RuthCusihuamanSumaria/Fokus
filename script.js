@@ -9,11 +9,13 @@ const botones= document.querySelectorAll('.app__card-button');
 const inputEnfoqueMusica = document.querySelector('#alternar-musica');
 const musica = new Audio('./sonidos/luna-rise-part-one.mp3');
 const botonIniciarPausar= document.querySelector('#start-pause');
+const textoIniciarPausar= document.querySelector('#start-pause span');
+const iconoIniciarPausar = document.querySelector(".app__card-primary-butto-icon");
 
 const audioPlay = new Audio('./sonidos/play.wav');
 const audioPausa = new Audio('./sonidos/pause.mp3');
 const audioTiempoFinalizado = new Audio('./sonidos/beep.mp3');
-
+const tiempoEnPantalla=document.querySelector('#timer');
 let tiempoTranscurridoEnSegundos =5;
 let idIntervalo=null;
 
@@ -88,13 +90,18 @@ function cambiarContexto(contexto){
 const cuentaREgresiva=()=>{
     //iniciarPausar();
     if(tiempoTranscurridoEnSegundos<=0){
-       reiniciar(); 
+       audioTiempoFinalizado .play();
+       //reiniciar(); 
        alert('Tiempo final');//para decirle al usuario que el tiempo se ha agotado y después concluye el flujo con un "return".
+       reiniciar();
        return; 
     }
+    textoIniciarPausar.textContent="Pausar";
+    iconoIniciarPausar.setAttribute('src' , `/imagenes/pausa.png`);
     //disminuir el valor de la variable en uno cada vez que la función "cuentaRegresiva" es ejecutada.
     tiempoTranscurridoEnSegundos -=1;
-    console.log("Temporizador: " + tiempoTranscurridoEnSegundos);
+    console.log("Temporizador: " + tiempoTranscurridoEnSegundos);// Muestra el tiempo actual
+    console.log('Id: ' + idIntervalo) // Muestra el ID actual
 }
 
 //botonIniciarPausar.addEventListener('click',cuentaREgresiva);
@@ -104,13 +111,17 @@ botonIniciarPausar.addEventListener('click',iniciarPausar);//para escuchar cada 
 
 function iniciarPausar(){
     if(idIntervalo){//donde la variable "idIntervalo" existe
+        audioPausa.play();
         reiniciar();
-        return;
+        return; // retorno anticipado -- circuit breaker
     }
+    audioPlay.play();
     idIntervalo=setInterval(cuentaREgresiva,1000);//método "setInterval()".pasa la función "cuentaRegresiva" y 1000 milisegundos.
 }
 
 function reiniciar(){
     clearInterval(idIntervalo);//interrumpe el setInterval
     idIntervalo=null;
+    textoIniciarPausar.textContent="Comenzar";
+    iconoIniciarPausar.setAttribute('src' , `/imagenes/play_arrow.png`);
 }
