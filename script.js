@@ -86,7 +86,7 @@ function cambiarContexto(contexto){
         case "descanso-largo":
             titulo.innerHTML=`
             Hora de volver a la superficie
-            Haz una pausa larga.
+           
             <strong class="app__title-strong">¡Haz una pausa larga!
             </strong>`; 
             break;   
